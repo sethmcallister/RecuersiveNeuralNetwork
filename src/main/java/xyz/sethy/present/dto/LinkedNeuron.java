@@ -1,7 +1,6 @@
 package xyz.sethy.present.dto;
 
 import java.util.*;
-import java.util.function.BinaryOperator;
 
 public class LinkedNeuron<T> implements Iterable<Neuron<T>> {
     private Neuron<T> first;
@@ -45,7 +44,7 @@ public class LinkedNeuron<T> implements Iterable<Neuron<T>> {
 
     public Neuron<T> getNext() {
         double completeWeight = 0.0;
-        for(Neuron<T> neuron : this)
+        for(Neuron<T> ignored : this)
             completeWeight += 1.0;
 
         double r = Math.random() * completeWeight;
