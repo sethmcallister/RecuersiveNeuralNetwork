@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.BinaryOperator;
 
 public class LinkedNeuron<T> implements Iterable<Neuron<T>> {
-    private Neuron first;
+    private Neuron<T> first;
     private Neuron<T> last;
     private int place;
 
@@ -37,15 +37,25 @@ public class LinkedNeuron<T> implements Iterable<Neuron<T>> {
         return place == 0;
     }
 
-    public Neuron<T> getMostWeighted() {
-        Neuron<T> most = toList().stream().reduce(BinaryOperator.maxBy(Comparator.comparingInt(o -> Collections.frequency(toList(), o)))).orElse(null);
-        return most;
-    }
-
     public List<Neuron<T>> toList() {
         List<Neuron<T>> list = new ArrayList<>();
         forEach(list::add);
         return list;
+    }
+
+    public Neuron<T> getNext() {
+        double completeWeight = 0.0;
+        for(Neuron<T> neuron : this)
+            completeWeight += 1.0;
+
+        double r = Math.random() * completeWeight;
+        double countWeight = 0.0;
+        for (Neuron<T> neuron : this) {
+            countWeight += 1.0;
+            if(countWeight >= r)
+                return neuron;
+        }
+        return null;
     }
 
     @Override

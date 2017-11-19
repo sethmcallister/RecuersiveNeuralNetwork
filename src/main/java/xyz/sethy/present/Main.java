@@ -15,14 +15,20 @@ public class Main {
 
     private final Map<Character, LinkedNeuron<Character>> learnerMap;
 
-    private Main() throws URISyntaxException {
+    private Main() {
         this.learnerMap = new HashMap<>();
+        long start = System.currentTimeMillis();
+
         setInstance(this);
-        setupLearningEnvironment();
+        try {
+            setupLearningEnvironment();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         List<String> poems = new ArrayList<>();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             String poem = makePoem();
             poems.add(poem);
         }
@@ -30,6 +36,11 @@ public class Main {
         for (int i = 0; i < poems.size(); i++) {
             System.out.println(i + ": " + poems.get(i));
         }
+        long finish = System.currentTimeMillis();
+        long time = finish - start;
+        System.out.println("==========================================");
+        System.out.println(String.format("Completed entire operation in %sMS", time));
+        System.out.println("==========================================");
     }
 
     private void setupLearningEnvironment() throws URISyntaxException {
@@ -73,17 +84,17 @@ public class Main {
         StringBuilder builder = new StringBuilder();
         builder.append("");
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             LinkedNeuron<Character> neuron = this.learnerMap.get(lastChar);
-            Neuron<Character> most = neuron.getMostWeighted();
+            Neuron<Character> most = neuron.getNext();
             if(most == null) {
                 continue;
             }
             char next = most.getPayload();
+            System.out.println(String.format("previous %s : most weighted next %s", lastChar, next));
             lastChar = next;
             builder.append(next);
 
-            System.out.println(String.format("previous %s : most weighted next %s", lastChar, next));
         }
         System.out.println("==========================================");
         System.out.println("finished to make poems");
@@ -122,10 +133,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        try {
-            new Main();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        new Main();
     }
 }
